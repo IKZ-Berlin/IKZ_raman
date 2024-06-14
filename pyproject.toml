@@ -74,7 +74,7 @@ select = [
     "UP",
     # isort
     "I",
-    # pylint 
+    # pylint
     "PL",
 ]
 
@@ -110,5 +110,6 @@ where = ["src"]
 [project.entry-points.'nomad.plugin']
 myparser = "nomad_ikz_raman.parsers:myparser"
 mypackage = "nomad_ikz_raman.schema_packages:mypackage"
+raman = "nomad_ikz_raman.schema_packages:raman"
 
 myapp = "nomad_ikz_raman.apps:myapp"
