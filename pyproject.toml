@@ -108,8 +108,9 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [project.entry-points.'nomad.plugin']
-myparser = "nomad_ikz_raman.parsers:myparser"
-mypackage = "nomad_ikz_raman.schema_packages:mypackage"
+# myparser = "nomad_ikz_raman.parsers:myparser"
+ramanparser = "nomad_ikz_raman.parsers:ramanparser"
+# mypackage = "nomad_ikz_raman.schema_packages:mypackage"
 raman = "nomad_ikz_raman.schema_packages:raman"
 
-myapp = "nomad_ikz_raman.apps:myapp"
+# myapp = "nomad_ikz_raman.apps:myapp"
