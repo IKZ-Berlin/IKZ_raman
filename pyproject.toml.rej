@@ -1,0 +1,8 @@
+diff a/pyproject.toml b/pyproject.toml	(rejected hunks)
+@@ -112,3 +112,6 @@ myparser = "nomad_ikz_raman.parsers:myparser"
+ mypackage = "nomad_ikz_raman.schema_packages:mypackage"
+ 
+ myapp = "nomad_ikz_raman.apps:myapp"
++[tool.cruft]
++# Avoid updating workflow files, this leads to permissions issues
++skip = [".github/*"]

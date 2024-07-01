@@ -16,7 +16,7 @@ classifiers = [
 name = "nomad-ikz_raman"
 description = "NOMAD plugin for Raman data from a Horiba LabRAM instrument"
 version = "0.1.0"
-readme = "README.rst"
+readme = "README.md"
 requires-python = ">=3.9"
 authors = [
     { name = "Sebastian Brueckner", email = "sebastian.brueckner@physik.hu-berlin.de" },
@@ -25,7 +25,7 @@ maintainers = [
     { name = "Sebastian Brueckner", email = "sebastian.brueckner@physik.hu-berlin.de" },
 ]
 license = { file = "LICENSE" }
-dependencies = ["nomad-lab>=1.2.2dev578"]
+dependencies = ["nomad-lab>=1.3.0"]
 
 [project.urls]
 Repository = "https://github.com/budschi/nomad-ikz_raman"
