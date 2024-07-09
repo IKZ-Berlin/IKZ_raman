@@ -29,7 +29,7 @@ from nomad.datamodel.metainfo.basesections import (
     SectionReference,
 )
 from nomad.datamodel.metainfo.plot import PlotlyFigure, PlotSection
-from nomad.metainfo import MEnum, Quantity, SchemaPackage, Section, SubSection
+from nomad.metainfo import Datetime, MEnum, Quantity, SchemaPackage, Section, SubSection
 
 from nomad_ikz_raman.schema_packages.utils import create_archive
 
@@ -52,33 +52,38 @@ class Excitation(ArchiveSection):
 
     # m_def = Section(a_eln=dict(overview=True))
     m_def = Section(a_eln=dict(overview=True))
-    filter_1 = Quantity(
-        type=MEnum(['488', '442', '514', '633']),
+    notch_filter = Quantity(
+        type=np.float64,
         description='Options for Filter 1.',
-        a_eln={'component': 'EnumEditQuantity'},
+        a_eln={'component': 'NumberEditQuantity', 'defaultDisplayUnit': 'nanometer'},
         unit='nanometer',
     )
-    filter_2 = Quantity(
-        type=MEnum(['488', '442', '514', '633']),
-        description='Options for Filter 2.',
-        a_eln={'component': 'EnumEditQuantity'},
-        unit='nanometer',
-    )
-    filter_3 = Quantity(
-        type=MEnum(['488', '442', '514', '633']),
-        description='Options for Filter 3.',
-        a_eln={'component': 'EnumEditQuantity'},
-        unit='nanometer',
-    )
+    # filter_2 = Quantity(
+    #     type=MEnum(['488', '442', '514', '633']),
+    #     description='Options for Filter 2.',
+    #     a_eln={'component': 'EnumEditQuantity'},
+    #     unit='nanometer',
+    # )
+    # filter_3 = Quantity(
+    #     type=MEnum(['488', '442', '514', '633']),
+    #     description='Options for Filter 3.',
+    #     a_eln={'component': 'EnumEditQuantity'},
+    #     unit='nanometer',
+    # )
     polarizer = Quantity(
         type=MEnum(['E||', 'E|-', 'E Circular']),
         description='Type of polarizer used.',
-        a_eln={'component': 'EnumEditQuantity'},
+        a_eln={'component': 'RadioEnumEditQuantity'},
     )
     spacer = Quantity(
         type=np.float64,
         description='Adjustment range of the screw spacer.',
-        a_eln={'component': 'NumberEditQuantity', 'minValue': 1, 'maxValue': 10},
+        a_eln={
+            'component': 'NumberEditQuantity',
+            'minValue': 1,
+            'maxValue': 10,
+            'defaultDisplayUnit': 'millimeter',
+        },
         unit='millimeter',
     )
 
@@ -89,21 +94,36 @@ class Detection(ArchiveSection):
     """
 
     m_def = Section(a_eln=dict(overview=True))
-    E_parallel = Quantity(
+    filter_1 = Quantity(
         type=bool,
-        description='Detection configuration for E parallel.',
+        description='check if Filter 1 was used',
         a_eln={'component': 'BoolEditQuantity'},
     )
-    E_perpendicular = Quantity(
+    filter_2 = Quantity(
         type=bool,
-        description='Detection configuration for E perpendicular.',
+        description='check if Filter 2 was used',
         a_eln={'component': 'BoolEditQuantity'},
     )
-    E_circular = Quantity(
-        type=bool,
-        description='Detection configuration for E circular.',
-        a_eln={'component': 'BoolEditQuantity'},
+    polarizer_detection = Quantity(
+        type=MEnum(['E||', 'E|-', 'E_Circular', 'None']),
+        description='Type of polarizer used for detection.',
+        a_eln={'component': 'RadioEnumEditQuantity'},
     )
+    # E_parallel = Quantity(
+    #     type=bool,
+    #     description='Detection configuration for E parallel.',
+    #     a_eln={'component': 'BoolEditQuantity'},
+    # )
+    # E_perpendicular = Quantity(
+    #     type=bool,
+    #     description='Detection configuration for E perpendicular.',
+    #     a_eln={'component': 'BoolEditQuantity'},
+    # )
+    # E_circular = Quantity(
+    #     type=bool,
+    #     description='Detection configuration for E circular.',
+    #     a_eln={'component': 'BoolEditQuantity'},
+    # )
 
 
 class ManualSettings(ArchiveSection):
@@ -135,7 +155,7 @@ class MeasurementSettings(ArchiveSection):
     acquisition_time = Quantity(
         type=np.float64,
         description='Time taken for data acquisition.',
-        a_eln={'component': 'NumberEditQuantity'},
+        a_eln={'component': 'NumberEditQuantity', 'defaultDisplayUnit': 'second'},
         unit='second',
     )
     accumulations = Quantity(
@@ -176,7 +196,7 @@ class MeasurementSettings(ArchiveSection):
     delay_time = Quantity(
         type=np.float64,
         description='Delay time set between acquisitions.',
-        a_eln={'component': 'NumberEditQuantity'},
+        a_eln={'component': 'NumberEditQuantity', 'defaultDisplayUnit': 'second'},
         unit='second',
     )
     binning = Quantity(
@@ -222,7 +242,7 @@ class MeasurementSettings(ArchiveSection):
     detector_temperature = Quantity(
         type=np.float64,
         description='Temperature of the detector.',
-        a_eln={'component': 'NumberEditQuantity'},
+        a_eln={'component': 'NumberEditQuantity', 'defaultDisplayUnit': 'celsius'},
         unit='celsius',
     )
     objective = Quantity(
@@ -243,32 +263,32 @@ class MeasurementSettings(ArchiveSection):
     laser = Quantity(
         type=np.float64,
         description='Wavelength of the laser used.',
-        a_eln={'component': 'NumberEditQuantity'},
+        a_eln={'component': 'NumberEditQuantity', 'defaultDisplayUnit': 'nanometer'},
         unit='nanometer',
     )
     hole = Quantity(
         type=np.float64,
         description='Diameter of the hole used.',
-        a_eln={'component': 'NumberEditQuantity'},
-        unit='micron',
+        a_eln={'component': 'NumberEditQuantity', 'defaultDisplayUnit': 'µm'},
+        unit='µm',
     )
     x = Quantity(
         type=np.float64,
         description='X-coordinate position of the sample.',
-        a_eln={'component': 'NumberEditQuantity'},
-        unit='micron',
+        a_eln={'component': 'NumberEditQuantity', 'defaultDisplayUnit': 'µm'},
+        unit='µm',
     )
     y = Quantity(
         type=np.float64,
         description='Y-coordinate position of the sample.',
-        a_eln={'component': 'NumberEditQuantity'},
-        unit='micron',
+        a_eln={'component': 'NumberEditQuantity', 'defaultDisplayUnit': 'µm'},
+        unit='µm',
     )
     z = Quantity(
         type=np.float64,
         description='Z-coordinate position of the sample.',
-        a_eln={'component': 'NumberEditQuantity'},
-        unit='micron',
+        a_eln={'component': 'NumberEditQuantity', 'defaultDisplayUnit': 'µm'},
+        unit='µm',
     )
 
 
@@ -278,11 +298,13 @@ class Results(PlotSection, ArchiveSection):
     """
 
     m_def = Section()
-    wavenumbers = Quantity(
+    wavenumber = Quantity(
         type=np.float64,
         description='Wavenumbers measured in 1/cm.',
         # a_eln={'component': 'NumberEditQuantity'},
         shape=['*'],
+        unit='1/cm',
+        a_eln={'defaultDisplayUnit': '1/cm'},
     )
     intensity = Quantity(
         type=np.float64,
@@ -378,6 +400,11 @@ class Ramanspectroscopy(Measurement, PlotSection, EntryData, ArchiveSection):
             'manualsettings': {},
         },
     )
+    datetime = Quantity(
+        type=Datetime,
+        description='Start time of Raman measurement',
+        a_eln={'component': 'DateTimeEditQuantity'},
+    )
     title = Quantity(
         type=str,
         description='Title of the experiment.',
@@ -388,9 +415,10 @@ class Ramanspectroscopy(Measurement, PlotSection, EntryData, ArchiveSection):
         description='Project under which the experiment was conducted.',
         a_eln={'component': 'StringEditQuantity'},
     )
-    site = Quantity(
+    location = Quantity(
         type=str,
         description='Site where the experiment was conducted.',
+        default='IKZ Berlin',
         a_eln={'component': 'StringEditQuantity'},
     )
     method = Quantity(
@@ -556,15 +584,16 @@ class Ramanspectroscopy(Measurement, PlotSection, EntryData, ArchiveSection):
                 self.title = raman_dict.get(
                     'Title',
                 )
+                self.datetime = raman_dict.get('Date')
                 self.project = raman_dict.get(
                     'Project',
                 )
-                self.site = raman_dict.get(
+                self.location = raman_dict.get(
                     'Site',
                 )
                 self.method = raman_dict.get('Method', 'Raman')
                 results = Results()
-                results.wavenumbers = raman_dict.get(
+                results.wavenumber = raman_dict.get(
                     'wavenumbers',
                 )
                 results.intensity = raman_dict.get(
@@ -582,9 +611,17 @@ class Ramanspectroscopy(Measurement, PlotSection, EntryData, ArchiveSection):
                 measurementsettings.range = raman_dict.get(
                     'Range',
                 )
-                measurementsettings.windows = raman_dict.get(
-                    'Windows',
-                )
+                if (
+                    raman_dict.get(
+                        'Windows',
+                    )
+                    != 'N/A'
+                ):
+                    measurementsettings.windows = int(
+                        raman_dict.get(
+                            'Windows',
+                        )
+                    )
                 measurementsettings.auto_scanning = (
                     True if raman_dict.get('AutoScanning') == 'On' else False
                 )
@@ -668,7 +705,7 @@ class Ramanspectroscopy(Measurement, PlotSection, EntryData, ArchiveSection):
         if not self.results:
             return
         figure1 = px.line(
-            x=self.results[0].wavenumbers,
+            x=self.results[0].wavenumber,
             y=self.results[0].intensity,
             title='Raman Spectrum',
             labels={

@@ -1,4 +1,9 @@
 import xml.etree.ElementTree as ET
+from datetime import datetime
+
+import numpy as np
+
+date_format = '%d.%m.%Y %H:%M'
 
 
 # Helper function to get text from an element if it exists
@@ -18,6 +23,7 @@ def extract_wavenumbers(root):
         )
         if wavenumbers_text is not None and wavenumbers_text.text:
             wavenumbers = wavenumbers_text.text.strip().split()
+            wavenumbers = [float(value) for value in wavenumbers]
     return wavenumbers
 
 
@@ -49,18 +55,22 @@ def parse_raman_xml(file_path):
     # Extract metadata
     metadata = {
         'Title': get_text(root.find(".//LSX[@ID='0x6C7469D9']")),
-        'Date': get_text(root.find(".//LSX[@ID='0x6D746164']/LSX[@ID='0x7D6C61DB']")),
-        'AcquisitionDate': get_text(
-            root.find(".//LSX[@ID='0x7CECDBD7']/LSX/LSX[@ID='0x7D6C61DB']")
+        'Date': datetime.strptime(
+            get_text(root.find(".//LSX[@ID='0x6D746164']/LSX[@ID='0x7D6C61DB']")),
+            date_format,
         ),
-        'AcquisitionTime': get_text(
-            root.find(".//LSX[@ID='0x6F707865']/LSX[@ID='0x7D6C61DB']")
+        'AcquisitionDate':  # datetime.strptime(
+        get_text(root.find(".//LSX[@ID='0x7CECDBD7']/LSX/LSX[@ID='0x7D6C61DB']")),
+        # date_format,
+        # ,
+        'AcquisitionTime': float(
+            get_text(root.find(".//LSX[@ID='0x6F707865']/LSX[@ID='0x7D6C61DB']"))
         ),
         'Accumulations': int(
             get_text(root.find(".//LSX[@ID='0x7D6363CE']/LSX[@ID='0x7D6C61DB']"))
         ),
         'Range': get_text(root.find(".//LSX[@ID='0x6F6E61D7']/LSX[@ID='0x7D6C61DB']")),
-        'Windows': int(
+        'Windows': (
             get_text(root.find(".//LSX[@ID='0x6CE1E0E6']/LSX[@ID='0x7D6C61DB']"))
         ),
         'AutoScanning': get_text(
@@ -75,11 +85,11 @@ def parse_raman_xml(file_path):
         'SpikeFilter': get_text(
             root.find(".//LSX[@ID='0x4F350544']/LSX[@ID='0x7D6C61DB']")
         ),
-        'DelayTime': get_text(
-            root.find(".//LSX[@ID='0x696C65DD']/LSX[@ID='0x7D6C61DB']")
+        'DelayTime': float(
+            get_text(root.find(".//LSX[@ID='0x696C65DD']/LSX[@ID='0x7D6C61DB']"))
         ),
-        'Binning': get_text(
-            root.find(".//LSX[@ID='0x6ED5D7CB']/LSX[@ID='0x7D6C61DB']")
+        'Binning': float(
+            get_text(root.find(".//LSX[@ID='0x6ED5D7CB']/LSX[@ID='0x7D6C61DB']"))
         ),
         'ReadoutMode': get_text(
             root.find(".//LSX[@ID='0xEA3A4A4E']/LSX[@ID='0x7D6C61DB']")
@@ -96,14 +106,23 @@ def parse_raman_xml(file_path):
         'InstrumentProcess': get_text(
             root.find(".//LSX[@ID='0x5A48F279']/LSX[@ID='0x7D6C61DB']")
         ),
-        'DetectorGain': get_text(
-            root.find(".//LSX[@ID='0x49454155']/LSX[@ID='0x7D6C61DB']")
+        'DetectorGain': np.nan
+        if get_text(root.find(".//LSX[@ID='0x49454155']/LSX[@ID='0x7D6C61DB']"))
+        == 'N/A'
+        else float(
+            get_text(root.find(".//LSX[@ID='0x49454155']/LSX[@ID='0x7D6C61DB']"))
         ),
-        'DetectorADC': get_text(
-            root.find(".//LSX[@ID='0x3B483AE7']/LSX[@ID='0x7D6C61DB']")
+        # float(
+        #     get_text(root.find(".//LSX[@ID='0x49454155']/LSX[@ID='0x7D6C61DB']"))
+        # ),
+        'DetectorADC': np.nan
+        if get_text(root.find(".//LSX[@ID='0x3B483AE7']/LSX[@ID='0x7D6C61DB']"))
+        == 'N/A'
+        else float(
+            get_text(root.find(".//LSX[@ID='0x3B483AE7']/LSX[@ID='0x7D6C61DB']"))
         ),
-        'DetectorTemperature': get_text(
-            root.find(".//LSX[@ID='0x6EDE5114']/LSX[@ID='0x7D6C61DB']")
+        'DetectorTemperature': float(
+            get_text(root.find(".//LSX[@ID='0x6EDE5114']/LSX[@ID='0x7D6C61DB']"))
         ),
         'Instrument': get_text(
             root.find(".//LSX[@ID='0xD9E15849']/LSX[@ID='0x7D6C61DB']")
@@ -124,15 +143,25 @@ def parse_raman_xml(file_path):
             get_text(root.find(".//LSX[@ID='0x7CC8E0D0']/LSX[@ID='0x7D6C61DB']"))
         ),
         'Filter': get_text(root.find(".//LSX[@ID='0x7C6CDBCB']/LSX[@ID='0x7D6C61DB']")),
-        'Laser': get_text(root.find(".//LSX[@ID='0x6D7361DE']/LSX[@ID='0x7D6C61DB']")),
-        'Hole': get_text(root.find(".//LSX[@ID='0x6D6C6F68']/LSX[@ID='0x7D6C61DB']")),
+        'Laser': float(
+            get_text(root.find(".//LSX[@ID='0x6D7361DE']/LSX[@ID='0x7D6C61DB']"))
+        ),
+        'Hole': float(
+            get_text(root.find(".//LSX[@ID='0x6D6C6F68']/LSX[@ID='0x7D6C61DB']"))
+        ),
         'StageXY': get_text(
             root.find(".//LSX[@ID='0x6FDAECD8']/LSX[@ID='0x7D6C61DB']")
         ),
         'StageZ': get_text(root.find(".//LSX[@ID='0x6F61EED8']/LSX[@ID='0x7D6C61DB']")),
-        'X': get_text(root.find(".//LSX[@ID='0x8000078']/LSX[@ID='0x7D6C61DB']")),
-        'Y': get_text(root.find(".//LSX[@ID='0x8000079']/LSX[@ID='0x7D6C61DB']")),
-        'Z': get_text(root.find(".//LSX[@ID='0x800007A']/LSX[@ID='0x7D6C61DB']")),
+        'X': float(
+            get_text(root.find(".//LSX[@ID='0x8000078']/LSX[@ID='0x7D6C61DB']"))
+        ),
+        'Y': float(
+            get_text(root.find(".//LSX[@ID='0x8000079']/LSX[@ID='0x7D6C61DB']"))
+        ),
+        'Z': float(
+            get_text(root.find(".//LSX[@ID='0x800007A']/LSX[@ID='0x7D6C61DB']"))
+        ),
         'wavenumbers': extract_wavenumbers(root),
         'intensities': extract_intensities(root),
     }
