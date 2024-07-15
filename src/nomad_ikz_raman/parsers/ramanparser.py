@@ -34,7 +34,7 @@ class RawFileRamanData(EntryData):
 
 
 class RamanParser(MatchingParser):
-    def parse(
+        def parse(
         self,
         mainfile: str,
         archive: 'EntryArchive',
@@ -42,16 +42,34 @@ class RamanParser(MatchingParser):
         child_archives: dict[str, 'EntryArchive'] = None,
     ) -> None:
         logger.info('RamanParser.parse', parameter=configuration.parameter)
-        # archive.results = Results(material=Material(elements=['H', 'O']))
-
         data_file = mainfile.split('/')[-1]
-        entry = Ramanspectroscopy.m_from_dict(Ramanspectroscopy.m_def)  # .a_template)
+        entry = Ramanspectroscopy() #.m_from_dict(Ramanspectroscopy.m_def.a_template)
         entry.data_file = data_file
+        entry.name = "".join(data_file.split(".")[:-1])
         file_name = f'{"".join(data_file.split(".")[:-1])}.archive.json'
         archive.data = RawFileRamanData(
             measurement=create_archive(entry, archive, file_name)
         )
         archive.metadata.entry_name = f'{data_file} data file'
+    # def parse(
+    #     self,
+    #     mainfile: str,
+    #     archive: 'EntryArchive',
+    #     logger: 'BoundLogger',
+    #     child_archives: dict[str, 'EntryArchive'] = None,
+    # ) -> None:
+    #     logger.info('RamanParser.parse', parameter=configuration.parameter)
+    #     data_file = mainfile.split('/')[-1]
+    #     # entry = Ramanspectroscopy.m_from_dict(
+    #     #     Ramanspectroscopy.m_def.a_template
+    #     # )  # .a_template)
+    #     entry = Ramanspectroscopy()
+    #     entry.data_file = data_file
+    #     file_name = f'{"".join(data_file.split(".")[:-1])}.archive.json'
+    #     archive.data = RawFileRamanData(
+    #         measurement=create_archive(entry, archive, file_name)
+    #     )
+    #     archive.metadata.entry_name = f'{data_file} data file'
 
 
 # if self.data_file is not None:

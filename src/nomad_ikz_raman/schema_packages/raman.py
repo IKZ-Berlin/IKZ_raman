@@ -581,6 +581,7 @@ class Ramanspectroscopy(Measurement, PlotSection, EntryData, ArchiveSection):
                 raman_dict = read_function(file.name)
                 #    raman_dict = read_function(file.name)  # , logger)
                 # write_function(raman_dict, archive, logger)
+                self.name = file.name.split('/')[-1].split('.xml')[0]
                 self.title = raman_dict.get(
                     'Title',
                 )

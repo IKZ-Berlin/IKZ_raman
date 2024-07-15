@@ -59,6 +59,7 @@ def parse_raman_xml(file_path):
             get_text(root.find(".//LSX[@ID='0x6D746164']/LSX[@ID='0x7D6C61DB']")),
             date_format,
         ),
+        #'Sample':
         'AcquisitionDate':  # datetime.strptime(
         get_text(root.find(".//LSX[@ID='0x7CECDBD7']/LSX/LSX[@ID='0x7D6C61DB']")),
         # date_format,
