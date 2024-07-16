@@ -8,7 +8,7 @@ date_format = '%d.%m.%Y %H:%M'
 
 # Helper function to get text from an element if it exists
 def get_text(element):
-    return element.text if element is not None else 'N/A'
+    return element.text if element is not None else ''  #'N/A'
 
 
 # Helper function to extract wavenumbers
@@ -59,7 +59,15 @@ def parse_raman_xml(file_path):
             get_text(root.find(".//LSX[@ID='0x6D746164']/LSX[@ID='0x7D6C61DB']")),
             date_format,
         ),
-        #'Sample':
+        'Operator': get_text(
+            root.find(".//LSX[@ID='0xECD4E4D0']/LSX[@ID='0x7D6C61DB']")
+        ),
+        'Sample': get_text(root.find(".//LSX[@ID='0x786DC6DF']/LSX[@ID='0x7D6C61DB']")),
+        'Remark': get_text(root.find(".//LSX[@ID='0x696DD0E4']/LSX[@ID='0x7D6C61DB']")),
+        'Site': get_text(root.find(".//LSX[@ID='0x6D746973']/LSX[@ID='0x7D6C61DB']")),
+        'Project': get_text(
+            root.find(".//LSX[@ID='0x6AE3D5D5']/LSX[@ID='0x7D6C61DB']")
+        ),
         'AcquisitionDate':  # datetime.strptime(
         get_text(root.find(".//LSX[@ID='0x7CECDBD7']/LSX/LSX[@ID='0x7D6C61DB']")),
         # date_format,
@@ -109,7 +117,7 @@ def parse_raman_xml(file_path):
         ),
         'DetectorGain': np.nan
         if get_text(root.find(".//LSX[@ID='0x49454155']/LSX[@ID='0x7D6C61DB']"))
-        == 'N/A'
+        == ''  #'N/A'
         else float(
             get_text(root.find(".//LSX[@ID='0x49454155']/LSX[@ID='0x7D6C61DB']"))
         ),
@@ -118,7 +126,7 @@ def parse_raman_xml(file_path):
         # ),
         'DetectorADC': np.nan
         if get_text(root.find(".//LSX[@ID='0x3B483AE7']/LSX[@ID='0x7D6C61DB']"))
-        == 'N/A'
+        == ''  #'N/A'
         else float(
             get_text(root.find(".//LSX[@ID='0x3B483AE7']/LSX[@ID='0x7D6C61DB']"))
         ),
