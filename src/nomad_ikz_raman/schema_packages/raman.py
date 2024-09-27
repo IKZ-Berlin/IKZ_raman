@@ -301,14 +301,14 @@ class Sample(CompositeSystemReference):
                     'name',
                     'reference',
                     'lab_id',
-                    'pointing_vector',
+                    'pointing_vector_direction',
                     'crystallographic_direction_of_E_vector',
                 ],
             ),
             overview=True,
         )
     )
-    pointing_vector = Quantity(
+    pointing_vector_direction = Quantity(
         type=str,
         description='Pointing vector referenced to surface normal in h k l, e.g. (100).',
         a_eln={'component': 'StringEditQuantity'},
@@ -612,9 +612,10 @@ class Ramanspectroscopy(Measurement, PlotSection, EntryData, ArchiveSection):
                     'Z',
                 )
                 self.measurement_settings = measurementsettings
-                self.manual_settings = ManualSettings()
-                self.manual_settings.polarization = Polarization()
-                self.manual_settings.filters = Filters()
+                if not self.manual_settings:
+                    self.manual_settings = ManualSettings()
+                    self.manual_settings.polarization = Polarization()
+                    self.manual_settings.filters = Filters()
                 ramanspectrometerref = RamanSpectrometerReference()
                 ramanspectrometerref.lab_id = raman_dict.get('InstrumentID')
                 ramanspectrometerref.normalize(archive, logger)
