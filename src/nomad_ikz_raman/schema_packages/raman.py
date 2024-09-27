@@ -519,10 +519,12 @@ class Ramanspectroscopy(Measurement, PlotSection, EntryData, ArchiveSection):
                 )
                 self.results = [results]
                 if raman_dict.get('Sample') != '':
-                    ramansample = CompositeSystemReference()
+                    ramansample = Sample()
                     ramansample.lab_id = raman_dict.get('Sample')
                     ramansample.normalize(archive, logger)
                     self.samples = [ramansample]
+                if not self.samples:
+                    self.samples = [Sample()]
 
                 measurementsettings = MeasurementSettings()
                 measurementsettings.acquisition_time = raman_dict.get(
@@ -611,8 +613,8 @@ class Ramanspectroscopy(Measurement, PlotSection, EntryData, ArchiveSection):
                 measurementsettings.z = raman_dict.get(
                     'Z',
                 )
-                self.measurement_settings = measurementsettings
                 if not self.manual_settings:
+                    self.measurement_settings = measurementsettings
                     self.manual_settings = ManualSettings()
                     self.manual_settings.polarization = Polarization()
                     self.manual_settings.filters = Filters()
